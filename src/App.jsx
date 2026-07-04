@@ -1,23 +1,49 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import AuthPage from "./pages/AuthPage"
 import Classes from "./pages/Classes";
-import Bookings from "./pages/Bookings";
+import MyBookings from "./pages/MyBookings";
+import Profile from "./pages/Profile";
 import logo from './assets/logo-barbell.png'
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import { Nav, Navbar, Container, Button } from "react-bootstrap"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "usehooks-ts";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 function Layout() {
   const [authToken, setAuthToken] = useLocalStorage("authToken", "")
+  const [username, setUsername] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!authToken) {
-      navigate('/login');
-    }
-  }, [authToken, navigate]);
+  const url = "http://localhost:3000";
+
+  const token = localStorage.getItem("authToken");
+  const decoded = jwtDecode(token);
+  const userId = decoded.id;
+
+  const fetchUsername = async (userId) => {
+        try {
+            const res = await axios.get(`${url}/users/${userId}`, {
+                params: { user_id: userId }
+            });
+
+            setUsername(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+  }
+
+useEffect(() => {
+  if (!authToken) {
+    navigate('/login');
+    return;
+  }
+  if (userId) {
+    fetchUsername(userId);
+  }
+}, [authToken, navigate]);
 
   const handleLogout = () => {
     setAuthToken("");
@@ -38,10 +64,13 @@ function Layout() {
               <Nav className="me-auto">
                 <Nav.Link href="/classes">Home</Nav.Link>
                 <Nav.Link href="/classes">Classes</Nav.Link>
-                <Nav.Link href="/bookings">Bookings</Nav.Link>
+                <Nav.Link href="/mybookings">My Bookings</Nav.Link>
               </Nav>
               <Nav className="ms-auto">
-                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>     
+                {username && (
+                  <Nav.Link href="/profile">Welcome Back, {username.username}!</Nav.Link>
+                )}   
+                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>  
               </Nav>
             </Navbar.Collapse>
         </Container>
@@ -58,7 +87,8 @@ export default function App() {
       <Routes>
         <Route path ="/" element={<Layout/>}>
           <Route path="/classes" element={<Classes/>}/> 
-          <Route path="/bookings" element={<Bookings/>}/> 
+          <Route path="/mybookings" element={<MyBookings/>}/> 
+          <Route path="/profile" element={<Profile/>}/> 
         </Route>
         <Route path="/login" element={<AuthPage/>}/>
         <Route path="*" element={<AuthPage/>}/>
