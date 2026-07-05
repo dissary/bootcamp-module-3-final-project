@@ -20,9 +20,17 @@ function Layout() {
 
   const url = "https://bootcamp-module-3-final-project-api.vercel.app";
 
-  const token = localStorage.getItem("authToken");
-  const decoded = jwtDecode(token);
-  const userId = decoded.id;
+const token = localStorage.getItem("authToken");
+
+let userId = null;
+if (token) {
+  try {
+    const decoded = jwtDecode(token);
+    userId = decoded.id;
+  } catch (err) {
+    console.error("Invalid token:", err);
+  }
+}
 
   const fetchUsername = async (userId) => {
         try {

@@ -8,9 +8,17 @@ export default function Bookings() {
     const [loading, setLoading] = useState(true);
     const url = "https://bootcamp-module-3-final-project-api.vercel.app";
 
-    const token = localStorage.getItem("authToken");
+const token = localStorage.getItem("authToken");
+
+let userId = null;
+if (token) {
+  try {
     const decoded = jwtDecode(token);
-    const userId = decoded.id;
+    userId = decoded.id;
+  } catch (err) {
+    console.error("Invalid token:", err);
+  }
+}
 
     const fetchBookings = async (userId) => {
         setLoading(true);
