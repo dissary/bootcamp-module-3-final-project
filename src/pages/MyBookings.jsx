@@ -70,7 +70,9 @@ export default function Bookings() {
 
     return (
         <Container className="mt-4">
-            <h1>My Bookings</h1>
+            <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3">
+                <h1 className="mb-2 mb-sm-0">My Bookings</h1>
+            </div>
             {loading ? (
             <div className="d-flex justify-content-center mt-5">
                 <Spinner animation="border" role="status">
@@ -84,19 +86,19 @@ export default function Bookings() {
                             <Card className="mb-3 shadow-sm">
                             <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                                 
-                                <div className="d-flex align-items-center">
+                                <div className="d-flex align-items-center gap-3" style={{ minWidth: 0, flex: "1 1 auto" }}>
                                     <div className="border rounded p-3 text-center me-3 flex-shrink-0 dateCard">
                                         <h5 className="mb-0">{formatDateTime(booking.start_time)}</h5>
                                         <small>{booking.duration} minutes</small>
                                     </div>
 
-                                    <div>
+                                    <div style={{ minWidth: 0}}>
                                         <h5 className="mb-1">{booking.title}</h5>
                                         <div className="text-muted">{booking.instructor}</div>
                                     </div>
                                 </div>
 
-                                <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-4">
+                                <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-4 flex-shrink-0">
                                     <h5 className="mb-0 text-sm-end">
                                         {booking.total_bookings} / {booking.capacity}
                                     </h5>

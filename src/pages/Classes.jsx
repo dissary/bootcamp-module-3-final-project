@@ -168,22 +168,20 @@ export default function Classes() {
                             <Col xs={12} key={cls.id} className="mb-3">
                                 <Card className="mb-3 shadow-sm">
                                     <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                                        <div className="d-flex align-items-center">
-
-                                            <div className="d-flex align-items-center ">
-                                                <div className="border rounded p-3 text-center me-3 flex-shrink-0 dateCard">
-                                                    <h4 className="mb-1">{formatDateTime(cls.start_time)}</h4>
-                                                    <small>{cls.duration} minutes</small>
-                                                </div>
+                                        
+                                        <div className="d-flex align-items-center gap-3" style={{ minWidth: 0, flex: "1 1 auto" }}>
+                                            <div className="border rounded p-3 text-center flex-shrink-0 dateCard">
+                                                <h4 className="mb-1">{formatDateTime(cls.start_time)}</h4>
+                                                <small>{cls.duration} minutes</small>
                                             </div>
-                                            
-                                            <div>
+
+                                            <div style={{ minWidth: 0 }}>
                                                 <h5 className="mb-1">{cls.title}</h5>
-                                                <div className="text-muted">{cls.instructor}</div>
+                                                <div className="text-muted text-truncate">{cls.instructor}</div>
                                             </div>
                                         </div>
 
-                                        <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-4">
+                                        <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-4 flex-shrink-0">
 
                                             <h5 className="mb-0 text-sm-end">
                                                 {cls.total_bookings}/{cls.capacity}
