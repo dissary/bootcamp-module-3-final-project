@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "usehooks-ts";
 import { jwtDecode } from "jwt-decode";
+import './App.css'
 import axios from "axios";
 
 function Layout() {
@@ -62,7 +63,7 @@ useEffect(() => {
           <Navbar.Toggle/>
             <Navbar.Collapse>
               <Nav className="me-auto">
-                <Nav.Link href="/classes">Home</Nav.Link>
+
                 <Nav.Link href="/classes">Classes</Nav.Link>
                 <Nav.Link href="/mybookings">My Bookings</Nav.Link>
               </Nav>

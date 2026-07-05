@@ -60,9 +60,11 @@ export default function Bookings() {
         const date = new Date(isoString);
 
         return date.toLocaleString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
+            day: "numeric",
+            month: "short",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true
         });
     };
 
@@ -78,21 +80,36 @@ export default function Bookings() {
             ) : (
                 <Row>
                     {bookings.map((booking) => (
-                        <Col md={4} key={booking.id} className="mb-3">
-                            <Card>
-                                <Card.Header>{formatDateTime(booking.start_time)}</Card.Header>
-                                <Card.Body>
-                                    <Card.Title>{booking.title}</Card.Title>
-                                    <Card.Text className="text-muted">{booking.instructor}</Card.Text>
-                                    <Card.Text className="text-muted">{booking.duration} mins</Card.Text>
-                                    <Card.Text>{booking.total_bookings} / {booking.capacity}</Card.Text>
+                        <Col xs={12} key={booking.id} className="mb-3">
+                            <Card className="mb-3 shadow-sm">
+                            <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                                
+                                <div className="d-flex align-items-center">
+                                    <div className="border rounded p-3 text-center me-3 flex-shrink-0 dateCard">
+                                        <h5 className="mb-0">{formatDateTime(booking.start_time)}</h5>
+                                        <small>{booking.duration} minutes</small>
+                                    </div>
+
+                                    <div>
+                                        <h5 className="mb-1">{booking.title}</h5>
+                                        <div className="text-muted">{booking.instructor}</div>
+                                    </div>
+                                </div>
+
+                                <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-4">
+                                    <h5 className="mb-0 text-sm-end">
+                                        {booking.total_bookings} / {booking.capacity}
+                                    </h5>
+
                                     <Button
-                                        variant="danger"
+                                        variant="outline-danger"
                                         onClick={() => handleCancelBook(booking.id)}
                                     >
-                                        Cancel <i className="bi bi-x-circle"></i>
+                                        Cancel
                                     </Button>
-                                </Card.Body>
+                                </div>
+
+                            </Card.Body>
                             </Card>
                         </Col>
                     ))}

@@ -56,8 +56,14 @@ export default function Profile() {
     },[])
 
     return(
-        <Container className="mt-4">
-        <h1>My Profile</h1>
+        <Container className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: "100vh" }}>
+
+            <div
+                className="p-4 shadow rounded-4 bg-white"
+                style={{ width: "100%", maxWidth: "420px" }}
+            >
+                        <h1 className="pp-h1">My Profile</h1>
         {loading ? (
             <div className="d-flex justify-content-center mt-5">
                 <Spinner animation="border" role="status">
@@ -66,8 +72,9 @@ export default function Profile() {
             </div>
         ) : ( <Row>
             {userInfo && (
-                <Col md={4} className="mb-3">
-                    <Form onSubmit={handleEditDetails}>
+                <Col className="mb-3">
+
+                    <Form className="profile-page" onSubmit={handleEditDetails}>
                         <Form.Group className="mb-3" controlId="formBasicUsername">
                             <Form.Label className="fw-bold">Username</Form.Label>
                             <Form.Control 
@@ -105,11 +112,12 @@ export default function Profile() {
                         </Form.Group>
                         <Button className="rounded-pill" variant="dark" type="submit">Update</Button>
                     </Form>
-                    
+
                 </Col>
             )}
             </Row>
         )}
+        </div>
         </Container>
     )
 }

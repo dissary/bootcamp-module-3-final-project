@@ -30,6 +30,7 @@ export default function AuthPage() {
             const res = await axios.post(`${url}/signup`, { username, email, phone_number, password })
             console.log(res.data);
 
+            alert('Account created successfully.')
             handleClose();
         } catch (error) {
             console.error(error);
@@ -50,82 +51,105 @@ export default function AuthPage() {
     }
 
     return (
-        <Container>
-
-                <Image src={logo} width={100} height={100}/>
-                <p className="fw-bold">Login to Gym Hood</p>
+        <Container
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: "100vh" }}
+        >
+            <div
+                className="p-4 shadow rounded-4 bg-white"
+                style={{ width: "100%", maxWidth: "420px" }}
+            >
+                <div className="text-center mb-3">
+                    <Image src={logo} width={80} height={80} />
+                    <p className="fw-bold mt-2 mb-0">Login to Gym Hood</p>
+                </div>
 
                 <Form onSubmit={handleLogin}>
-                            <Form.Group className="mb-3" controlId="formBasicUsername">
-                                <Form.Label className="fw-bold">Username</Form.Label>
-                                <Form.Control 
-                                onChange={(e) => setUsername(e.target.value)}
-                                type="text" 
-                                placeholder="Username"/>
-                            </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label className="fw-bold">Username</Form.Label>
+                        <Form.Control
+                            onChange={(e) => setUsername(e.target.value)}
+                            type="text"
+                            placeholder="Username"
+                        />
+                    </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Label className="fw-bold">Password</Form.Label>
-                                <Form.Control
-                                onChange={(e) => setPassword(e.target.value)}
-                                type="password"
-                                placeholder="Password"/>
-                            </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label className="fw-bold">Password</Form.Label>
+                        <Form.Control
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            placeholder="Password"
+                        />
+                    </Form.Group>
 
-                    <Button className="rounded-pill" variant="dark" type="submit">
+                    <Button className="rounded-pill w-100" variant="dark" type="submit">
                         Login
                     </Button>
                 </Form>
 
-                <Button className="rounded-pill mt-2" variant="outline-dark" onClick={handleShow}>
+                <Button
+                    className="rounded-pill mt-3 w-100"
+                    variant="outline-dark"
+                    onClick={handleShow}
+                >
                     Create new account
                 </Button>
+
                 <Modal show={show} onHide={handleClose} centered>
                     <Modal.Body>
-                        <h2 className="mb-4" style={{ fontWeight: "bold" }}>
+                        <h2 className="mb-3 fw-bold text-center">
                             Create your account
                         </h2>
-                        <Form className="d=grid gap-2 px-5" onSubmit={handleSignUp}>
-                            <Form.Group className="mb-3" controlId="formBasicUsername">
+
+                        <Form className="d-grid gap-2 px-3" onSubmit={handleSignUp}>
+                            <Form.Group className="mb-2">
                                 <Form.Label className="fw-bold">Username</Form.Label>
-                                <Form.Control 
-                                onChange={(e) => setUsername(e.target.value)}
-                                type="text" 
-                                placeholder="Username"/>
+                                <Form.Control
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    type="text"
+                                    placeholder="Username"
+                                />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                            <Form.Group className="mb-2">
                                 <Form.Label className="fw-bold">Email address</Form.Label>
-                                <Form.Control 
-                                onChange={(e) => setEmail(e.target.value)}
-                                type="email"
-                                placeholder="Email address"/>
+                                <Form.Control
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    type="email"
+                                    placeholder="Email address"
+                                />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicNumber">
+                            <Form.Group className="mb-2">
                                 <Form.Label className="fw-bold">Phone number</Form.Label>
-                                <Form.Control 
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                type="text" 
-                                placeholder="Phone number"/>
+                                <Form.Control
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    type="text"
+                                    placeholder="Phone number"
+                                />
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-2">
                                 <Form.Label className="fw-bold">Password</Form.Label>
                                 <Form.Control
-                                onChange={(e) => setPassword(e.target.value)}
-                                type="password"
-                                placeholder="Password"/>
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    type="password"
+                                    placeholder="Password"
+                                />
                             </Form.Group>
 
-                        <p style={{ fontSize: "12px"}}>
-                            By tapping Sign Up, you agree to create an account and to Gym Hood's Terms, Privacy Policy and Cookies Policy.
-                        </p>
+                            <p style={{ fontSize: "12px" }}>
+                                By tapping Sign Up, you agree to Gym Hood Terms, Privacy Policy and Cookies Policy.
+                            </p>
 
-                        <Button className="rounded-pill" variant="dark" type="submit">Sign Up</Button>
+                            <Button className="rounded-pill w-100" variant="dark" type="submit">
+                                Sign Up
+                            </Button>
                         </Form>
                     </Modal.Body>
                 </Modal>
+            </div>
         </Container>
-    )
+    );
 }

@@ -8,11 +8,31 @@ export default function Classes() {
     const [loading, setLoading] = useState(true);
 
     // modal
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [modalShow, setModalShow] = useState(null);
+    const handleShowAddClass = () => {
+        setEditingClassId(null);
+        setTitle("");
+        setDescription("");
+        setInstructor("");
+        setStartTime("");
+        setDuration("");
+        setCapacity("");
+        setModalShow("AddClass");
+    }
+    const handleShowEditClass = (cls) => {
+    setEditingClassId(cls.id);
+    setTitle(cls.title);
+    setDescription(cls.description);
+    setInstructor(cls.instructor);
+    setStartTime(cls.start_time?.slice(0, 16)); // trim to match datetime-local format
+    setDuration(cls.duration);
+    setCapacity(cls.capacity);
+    setModalShow("EditClass");
+}
 
-    // add class
+    const [editingClassId, setEditingClassId] = useState(null);
+
+    // add & edit class
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [instructor, setInstructor] = useState("")
@@ -25,6 +45,7 @@ export default function Classes() {
     const token = localStorage.getItem("authToken");
     const decoded = jwtDecode(token);
     const userId = decoded.id;
+    const isAdmin = decoded.role === "admin";
 
     const fetchClasses = async () => {
         setLoading(true);
@@ -62,11 +83,12 @@ export default function Classes() {
             console.error(err);
         }
     }
+    const handleClose = () => setModalShow(null);
 
-    const handleEditClass = async (classId) => {
-
+    const handleEditClass = async (e) => {
+        e.preventDefault()
         try {
-            await axios.put(`${url}/classes/${classId}`, {
+            await axios.put(`${url}/classes/${editingClassId}`, {
                 title: title,
                 description: description,
                 instructor: instructor,
@@ -108,130 +130,176 @@ export default function Classes() {
     const formatDateTime = (isoString) => {
         const date = new Date(isoString);
 
-        return date.toLocaleString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
+        return date.toLocaleString("en-MY", {
+            day: "numeric",
+            month: "short",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true
         });
     };
 
     return (
-<Container className="mt-4">
-        <h1>Available Classes</h1>
-        <Button className="mb-3" variant="dark" onClick={handleShow}>Add Class</Button>
+        <Container className="mt-4">
+            <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3">
+                
+                <h1 className="mb-2 mb-sm-0">Available Classes</h1>
 
-        {loading ? (
-            <div className="d-flex justify-content-center mt-5">
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
-            </div>
-        ) : (
-            <Row>
-                {classes.map((cls) => (
-                    <Col md={4} key={cls.id} className="mb-3">
-                        <Card>
-                            <Card.Header>
-                                {formatDateTime(cls.start_time)}
-                                </Card.Header>
-                            <Card.Body>
-                                <Card.Title>{cls.title}</Card.Title>
-                                <Card.Text className="text-muted">{cls.instructor}</Card.Text>
-                                <Card.Text className="text-muted">{cls.duration} mins</Card.Text>
-                                <Card.Text>
-                                    {cls.total_bookings} / {cls.capacity}
-                                </Card.Text>
-
-                                {cls.is_booked ? (
-                                    <Button
-                                        variant="danger"
-                                        onClick={() => handleCancelBook(cls.id)}
-                                    >
-                                        Cancel <i className="bi bi-x-circle"></i>
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        variant="dark"
-                                        onClick={() => handleBook(cls.id)}
-                                    >
-                                        Book <i className="bi bi-check-circle"></i>
-                                    </Button>
-                                )}
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                ))}
-            </Row>
-        )}
-        <Modal show={show} onHide={handleClose} centered>
-            <Modal.Body className="d-grid gap-2 px-5">
-                <h2 className="mb-4" style={{ fontWeight: "bold"}}>
-                    Add Classes
-                </h2>
-                <Form onSubmit={handleAddClass}>
-                    <Form.Group className="mb-3" controlId="formBasicTitle">
-                        <Form.Label className="fw-bold">Title</Form.Label>
-                        <Form.Control 
-                        onChange={(e) => setTitle(e.target.value)}
-                        type="text" 
-                        placeholder="Title"
-                        required/>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicDescription">
-                        <Form.Label className="fw-bold">Description</Form.Label>
-                        <Form.Control
-                        onChange={(e) => setDescription(e.target.value)}
-                        as="textarea"
-                        rows={3}
-                        placeholder="Description"
-                        required/>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicInstructor">
-                        <Form.Label className="fw-bold">Instructor</Form.Label>
-                        <Form.Control 
-                        onChange={(e) => setInstructor(e.target.value)}
-                        type="text" 
-                        placeholder="Instructor Name"
-                        required/>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicTime">
-                        <Form.Label className="fw-bold">Start Time</Form.Label>
-                        <Form.Control 
-                        onChange={(e) => setStartTime(e.target.value)}
-                        type="datetime-local" 
-                        placeholder="Start Time"
-                        required/>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicDuration">
-                        <Form.Label className="fw-bold">Class Duration</Form.Label>
-                        <Form.Control 
-                        onChange={(e) => setDuration(e.target.value)}
-                        type="number" 
-                        placeholder="Class Duration"
-                        required/>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicCapacity">
-                        <Form.Label className="fw-bold">Capacity</Form.Label>
-                        <Form.Control 
-                        onChange={(e) => setCapacity(e.target.value)}
-                        type="number" 
-                        placeholder="Capacity"
-                        required/>
-                    </Form.Group>
-
-
-                    <Button className="rounded-pill" variant="dark" type="submit">
+                {isAdmin && (
+                    <Button
+                        variant="dark"
+                        onClick={handleShowAddClass}
+                        className="align-self-sm-auto"
+                    >
                         Add Class
                     </Button>
-                </Form>
-            </Modal.Body>
-        </Modal>
-    </Container>
+                )}
+
+            </div>  
+                {loading ? (
+                    <div className="d-flex justify-content-center mt-5">
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div>
+                ) : (
+                    <Row>
+                        {classes.map((cls) => (
+                            <Col xs={12} key={cls.id} className="mb-3">
+                                <Card className="mb-3 shadow-sm">
+                                    <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                                        <div className="d-flex align-items-center">
+
+                                            <div className="d-flex align-items-center ">
+                                                <div className="border rounded p-3 text-center me-3 flex-shrink-0 dateCard">
+                                                    <h4 className="mb-1">{formatDateTime(cls.start_time)}</h4>
+                                                    <small>{cls.duration} minutes</small>
+                                                </div>
+                                            </div>
+                                            
+                                            <div>
+                                                <h5 className="mb-1">{cls.title}</h5>
+                                                <div className="text-muted">{cls.instructor}</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-4">
+
+                                            <h5 className="mb-0 text-sm-end">
+                                                {cls.total_bookings}/{cls.capacity}
+                                            </h5>
+
+                                            {cls.is_booked ? (
+                                                <Button
+                                                    variant="outline-danger"
+                                                    onClick={() => handleCancelBook(cls.id)}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="outline-dark"
+                                                    onClick={() => handleBook(cls.id)}
+                                                >
+                                                    Book
+                                                </Button>
+                                            )}
+
+                                            {isAdmin && (
+                                                <Button
+                                                    variant="outline-dark"
+                                                    onClick={() => handleShowEditClass(cls)}
+                                                >
+                                                    Edit
+                                                </Button>
+                                            )}
+
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                )}
+                <Modal show={modalShow !== null} animation={false} onHide={handleClose} centered>
+                    <Modal.Body className="d-grid gap-2 px-5">
+                        <h2 className="mb-2" style={{ fontWeight: "bold"}}>
+                            {modalShow === "AddClass" ? "Add Class" : "Edit Class"}
+                        </h2>
+                        <Form onSubmit={modalShow === "AddClass" ? handleAddClass : handleEditClass}>
+                            <Form.Group className="mb-3" controlId="formBasicTitle">
+                                <Form.Label className="fw-bold">Title</Form.Label>
+                                <Form.Control 
+                                onChange={(e) => setTitle(e.target.value)}
+                                value={title}
+                                type="text" 
+                                placeholder="Title"
+                                required/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicDescription">
+                                <Form.Label className="fw-bold">Description</Form.Label>
+                                <Form.Control
+                                onChange={(e) => setDescription(e.target.value)}
+                                value={description}
+                                as="textarea"
+                                rows={3}
+                                placeholder="Description"
+                                required/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicInstructor">
+                                <Form.Label className="fw-bold">Instructor</Form.Label>
+                                <Form.Control 
+                                onChange={(e) => setInstructor(e.target.value)}
+                                value = {instructor}
+                                type="text" 
+                                placeholder="Instructor Name"
+                                required/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicTime">
+                                <Form.Label className="fw-bold">Start Time</Form.Label>
+                                <Form.Control 
+                                onChange={(e) => setStartTime(e.target.value)}
+                                value = {start_time}
+                                type="datetime-local" 
+                                placeholder="Start Time"
+                                required/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicDuration">
+                                <Form.Label className="fw-bold">Class Duration</Form.Label>
+                                <Form.Control 
+                                onChange={(e) => setDuration(e.target.value)}
+                                value = {duration}
+                                type="number" 
+                                placeholder="Class Duration"
+                                min = "30"
+                                max = "60"
+                                required/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicCapacity">
+                                <Form.Label className="fw-bold">Capacity</Form.Label>
+                                <Form.Control 
+                                onChange={(e) => setCapacity(e.target.value)}
+                                value = {capacity}
+                                type="number" 
+                                placeholder="Capacity"
+                                min = "5"
+                                max = "20"
+                                required/>
+                            </Form.Group>
+
+
+                            <Button className="" variant="dark" type="submit">
+                                {modalShow === "AddClass" ? "Add" : "Edit"}
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+        </Container>
 
     )
 }
