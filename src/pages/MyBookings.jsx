@@ -90,7 +90,7 @@ export default function Bookings() {
                                         variant="danger"
                                         onClick={() => handleCancelBook(booking.id)}
                                     >
-                                        Cancel Book <i className="bi bi-x-circle"></i>
+                                        Cancel <i className="bi bi-x-circle"></i>
                                     </Button>
                                 </Card.Body>
                             </Card>
