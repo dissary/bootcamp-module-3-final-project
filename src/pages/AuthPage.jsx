@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import logo from '../assets/logo-barbell.png'
 
 export default function AuthPage() {
-    const url = "http://localhost:3000";
+    const url = "https://bootcamp-module-3-final-project-api.vercel.app";
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);

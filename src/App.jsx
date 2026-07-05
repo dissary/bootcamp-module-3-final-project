@@ -18,7 +18,7 @@ function Layout() {
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
 
-  const url = "http://localhost:3000";
+  const url = "https://bootcamp-module-3-final-project-api.vercel.app";
 
   const token = localStorage.getItem("authToken");
   const decoded = jwtDecode(token);

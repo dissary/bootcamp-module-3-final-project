@@ -12,7 +12,7 @@ export default function Profile() {
     const [phone_number, setPhoneNumber] = useState("")
     const [password, setPassword] = useState("")
 
-    const url = "http://localhost:3000";
+    const url = "https://bootcamp-module-3-final-project-api.vercel.app";
     
     const token = localStorage.getItem("authToken");
     const decoded = jwtDecode(token);

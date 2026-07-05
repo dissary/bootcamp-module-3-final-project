@@ -6,7 +6,7 @@ import { Container, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 export default function Bookings() {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
-    const url = "http://localhost:3000";
+    const url = "https://bootcamp-module-3-final-project-api.vercel.app";
 
     const token = localStorage.getItem("authToken");
     const decoded = jwtDecode(token);
