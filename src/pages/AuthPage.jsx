@@ -29,6 +29,8 @@ export default function AuthPage() {
         try {
             const res = await axios.post(`${url}/signup`, { username, email, phone_number, password })
             console.log(res.data);
+
+            handleClose();
         } catch (error) {
             console.error(error);
         }
@@ -91,8 +93,6 @@ export default function AuthPage() {
                                 type="text" 
                                 placeholder="Username"/>
                             </Form.Group>
-
-
 
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label className="fw-bold">Email address</Form.Label>
