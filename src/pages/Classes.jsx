@@ -42,17 +42,9 @@ export default function Classes() {
 
     const url = "https://bootcamp-module-3-final-project-api.vercel.app";
 
-const token = localStorage.getItem("authToken");
-
-let userId = null;
-if (token) {
-  try {
+    const token = localStorage.getItem("authToken");
     const decoded = jwtDecode(token);
-    userId = decoded.id;
-  } catch (err) {
-    console.error("Invalid token:", err);
-  }
-}
+    const userId = decoded.id;
     const isAdmin = decoded.role === "admin";
 
     const fetchClasses = async () => {
