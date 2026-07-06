@@ -122,6 +122,11 @@ export default function Classes() {
         fetchClasses();
     };
 
+    const handleDeleteClass = async (classId) => {
+        await axios.delete(`${url}/classes/${classId}`);
+        fetchClasses();
+    };
+
     useEffect(() => {
         fetchClasses();
     }, []);
@@ -209,6 +214,14 @@ export default function Classes() {
                                                     onClick={() => handleShowEditClass(cls)}
                                                 >
                                                     Edit
+                                                </Button>
+                                            )}
+                                            {isAdmin && (
+                                                <Button
+                                                    variant="outline-dark"
+                                                    onClick={() => handleDeleteClass(cls.id)}
+                                                >
+                                                    Delete
                                                 </Button>
                                             )}
 
